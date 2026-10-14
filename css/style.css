@@ -1,0 +1,227 @@
+/* =========================================================
+   Samarpan — poetry site
+   Aged parchment, near-black ink, one muted green accent,
+   dull brass for quiet marks. Nepali set in Noto Serif
+   Devanagari; Latin text in Spectral.
+   ========================================================= */
+:root{
+  --paper:   #E9E8D2;
+  --panel:   #DFE0C2;
+  --card:    #F2F1E3;
+
+  --rule:      #C3BE9C;
+  --rule-soft: #D3CFAE;
+
+  --ink:       #171D18;
+  --ink-soft:  #4A5147;
+  --ink-faint: #7B8170;
+
+  --accent:      #55643C;
+  --accent-dark: #3F4B2C;
+  --brass:       #8A6C2E;
+
+  --font-latin: 'Spectral', Georgia, 'Times New Roman', serif;
+  --font-deva:  'Noto Serif Devanagari', 'Spectral', Georgia, serif;
+
+  --maxw: 1000px;
+  --measure: 640px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:   #12160F;
+    --panel:   #181D14;
+    --card:    #1D2318;
+    --rule:      #3A4230;
+    --rule-soft: #2C3324;
+    --ink:       #ECEAD3;
+    --ink-soft:  #B9BBA2;
+    --ink-faint: #858A72;
+    --accent:      #A3B57A;
+    --accent-dark: #C2D49A;
+    --brass:       #C9A860;
+  }
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; scroll-padding-top:80px; }
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-deva);
+  font-size:17px;
+  line-height:1.8;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+a{ color:inherit; text-decoration:none; }
+ol,ul{ list-style:none; margin:0; padding:0; }
+h1,h2,h3,p{ margin:0; }
+
+:focus-visible{ outline:1.5px solid var(--accent); outline-offset:3px; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+}
+
+/* ---------- Nav ---------- */
+.nav{
+  position:sticky; top:0; z-index:50;
+  background:color-mix(in srgb, var(--paper) 90%, transparent);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--rule);
+}
+.nav-inner{
+  max-width:var(--maxw); margin:0 auto;
+  padding:18px 24px;
+  display:flex; align-items:baseline; justify-content:space-between; gap:16px;
+}
+.nav-name{
+  font-family:var(--font-latin);
+  font-weight:600; font-size:21px;
+}
+.nav-links{
+  display:flex; gap:28px;
+  font-family:var(--font-latin);
+  font-size:15px; color:var(--ink-soft);
+}
+.nav-links a{
+  padding-bottom:3px; border-bottom:1px solid transparent;
+  transition:color .15s ease, border-color .15s ease;
+}
+.nav-links a:hover{ color:var(--accent); border-color:var(--accent); }
+
+/* ---------- Shared ---------- */
+.eyebrow{
+  font-family:var(--font-latin);
+  font-style:italic; font-size:15px; font-weight:500;
+  color:var(--brass);
+  margin-bottom:10px;
+}
+.section{ padding:88px 24px 104px; }
+.section-inner{ max-width:var(--maxw); margin:0 auto; }
+.section-head{
+  margin-bottom:44px; padding-bottom:20px;
+  border-bottom:1px solid var(--rule-soft);
+}
+.section-title{
+  font-size:clamp(26px, 3.4vw, 34px);
+  font-weight:600; line-height:1.3;
+}
+
+/* ---------- Hero ---------- */
+.hero{
+  padding:120px 24px 96px;
+  border-bottom:1px solid var(--rule);
+  background:var(--panel);
+}
+.hero-inner{ max-width:var(--maxw); margin:0 auto; }
+.hero-title{
+  font-size:clamp(40px, 7vw, 76px);
+  font-weight:600; line-height:1.2;
+  letter-spacing:-.01em;
+}
+.hero-sub{
+  margin-top:6px;
+  font-size:clamp(20px, 2.6vw, 28px);
+  color:var(--accent);
+  font-weight:500;
+}
+.intro{
+  margin-top:56px;
+  max-width:var(--measure);
+  padding-left:26px;
+  border-left:2px solid var(--accent);
+}
+.intro p{
+  font-size:16.5px; line-height:2; color:var(--ink-soft);
+}
+.intro p + p{ margin-top:20px; }
+
+/* ---------- Index ---------- */
+.poem-index{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  column-gap:56px;
+  margin-bottom:96px;
+}
+.poem-index li{ border-top:1px solid var(--rule-soft); }
+.poem-index a{
+  display:flex; align-items:baseline; gap:18px;
+  padding:16px 0;
+  font-size:19px; font-weight:500;
+  transition:color .15s ease, padding-left .2s ease;
+}
+.poem-index a:hover{ color:var(--accent); padding-left:6px; }
+.idx{
+  font-size:14px; color:var(--brass); font-weight:600; width:28px; flex-shrink:0;
+}
+
+/* ---------- Poems ---------- */
+.poem-list{
+  display:flex; flex-direction:column; gap:72px;
+  align-items:center;
+}
+.poem{
+  position:relative;
+  width:100%; max-width:var(--measure);
+  background:var(--card);
+  border:1px solid var(--rule-soft);
+  padding:56px 56px 52px;
+  opacity:0; transform:translateY(14px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.poem.is-visible{ opacity:1; transform:none; }
+.no-js .poem{ opacity:1; transform:none; }
+
+.poem-num{
+  position:absolute; top:22px; right:28px;
+  font-size:14px; color:var(--brass); font-weight:600;
+}
+.poem-title{
+  font-size:clamp(26px, 3vw, 32px);
+  font-weight:600; line-height:1.35;
+}
+.poem-byline{
+  margin-top:6px;
+  font-family:var(--font-latin);
+  font-style:italic; font-size:14px; color:var(--brass);
+}
+.poem-body{
+  margin-top:32px;
+  padding-top:28px;
+  border-top:1px solid var(--rule-soft);
+}
+.poem-body p{
+  font-size:18px; line-height:2.05; color:var(--ink);
+}
+.poem-body p + p{ margin-top:26px; }
+
+/* ---------- Footer ---------- */
+.footer{ border-top:1px solid var(--rule); background:var(--panel); }
+.footer-inner{
+  max-width:var(--maxw); margin:0 auto;
+  padding:30px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; flex-wrap:wrap;
+  font-family:var(--font-latin); font-style:italic; font-size:14px;
+  color:var(--ink-faint);
+}
+.footer-top-link:hover{ color:var(--accent); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 760px){
+  body{ font-size:16px; }
+  .hero{ padding:80px 20px 64px; }
+  .section{ padding:56px 20px 72px; }
+  .poem-index{ grid-template-columns:1fr; margin-bottom:64px; }
+  .poem{ padding:44px 26px 40px; }
+  .poem-body p{ font-size:17px; }
+  .nav-inner{ padding:14px 20px; }
+  .nav-name{ font-size:18px; }
+  .nav-links{ gap:18px; }
+}
