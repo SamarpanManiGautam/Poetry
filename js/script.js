@@ -1,7 +1,17 @@
 // Footer year
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// Gentle fade-in for headings and each stanza as they scroll into view
+// Warm light that follows the pointer
+(function () {
+  var root = document.documentElement;
+  function move(x, y) {
+    root.style.setProperty('--mx', x + 'px');
+    root.style.setProperty('--my', y + 'px');
+  }
+  window.addEventListener('pointermove', function (e) { move(e.clientX, e.clientY); }, { passive: true });
+})();
+
+// Stanzas surface slowly as they scroll into view
 (function () {
   var items = document.querySelectorAll('.reveal');
   if (!('IntersectionObserver' in window)) {
