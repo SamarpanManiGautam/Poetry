@@ -170,6 +170,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
     leaves.forEach(function (l, i) {
       l.inert = i !== n;
       l.setAttribute('aria-hidden', i !== n ? 'true' : 'false');
+      // pages far ahead are not drawn at all, which keeps phones smooth
+      l.style.display = (i > n + 2) ? 'none' : '';
     });
 
     var leaf = leaves[n];
@@ -184,11 +186,23 @@ document.getElementById('year').textContent = new Date().getFullYear();
     ui();
   }
 
+  var lastSig = '';
+
   function build() {
+    var pages = buildPages();
+    // nothing changed (e.g. a font finished loading but pages break the same): leave the book alone
+    var sig = book.clientWidth + 'x' + book.clientHeight + '|' + pages.map(function (p) {
+      return p.dataset.key + ':' + p.querySelectorAll('.poem-body > p').length;
+    }).join(',');
+    if (leaves.length && sig === lastSig) return;
+    lastSig = sig;
+
     var key = null, off = 0;
+    var seen = {};
     if (leaves.length) {
       key = leaves[cur].dataset.key;
       for (var j = cur - 1; j >= 0 && leaves[j].dataset.key === key; j--) off++;
+      leaves.forEach(function (l, i) { if (l.classList.contains('is-seen')) seen[i] = true; });
     }
     leaves.forEach(function (l, i) {
       clearTimeout(timers[i]);
@@ -196,11 +210,11 @@ document.getElementById('year').textContent = new Date().getFullYear();
     });
     leaves = []; state = []; timers = [];
 
-    var pages = buildPages();
     N = pages.length;
     pages.forEach(function (el, i) {
       var leaf = makeLeaf(el, i);
       leaf.style.zIndex = N - i;
+      if (seen[i]) leaf.classList.add('is-seen');
       book.appendChild(leaf);
       leaves.push(leaf);
       state.push(false);
@@ -271,8 +285,9 @@ document.getElementById('year').textContent = new Date().getFullYear();
   window.addEventListener('resize', function () {
     if (book.clientWidth !== lastW || book.clientHeight !== lastH) rebuildSoon();
   });
-  if (document.fonts && document.fonts.addEventListener) {
-    document.fonts.addEventListener('loadingdone', rebuildSoon);
+  // measure again once, when all fonts are ready
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(rebuildSoon);
   }
 
   // Book styling switches on only once the script is running. If anything
