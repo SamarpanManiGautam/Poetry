@@ -361,6 +361,12 @@ button{ font:inherit; color:inherit; }
 /* the extra row on the contents page */
 .poem-index .extra a{ font-family:var(--font-latin); font-style:italic; letter-spacing:.08em; }
 
+/* small mark while the book is being built */
+.js .book-loading{
+  position:absolute; inset:0; display:grid; place-items:center;
+  font-family:var(--font-title); font-size:28px; letter-spacing:.3em; color:var(--accent);
+}
+
 /* stanzas surface as the page settles */
 .js .reveal{ opacity:0; transform:translateY(10px); }
 .js .leaf.is-seen .reveal{
