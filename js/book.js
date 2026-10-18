@@ -1,7 +1,11 @@
 // Footer year
 document.getElementById('year').textContent = new Date().getFullYear();
 
-
+// ---------------------------------------------------------
+// The book: cover, foreword, contents and poems become leaves.
+// Long poems are split across pages to fit the page size.
+// Turn pages with the buttons, arrow keys, or a swipe.
+// ---------------------------------------------------------
 (function () {
   var main = document.querySelector('main');
   var pager = main && main.querySelector('.pager');
@@ -11,8 +15,20 @@ document.getElementById('year').textContent = new Date().getFullYear();
   var nextBtn = document.getElementById('next');
   var count = document.getElementById('count');
 
-  var DUR = (window.matchMedia && window.matchMedia('(max-width: 760px)').matches) ? 600 : 1100; // must match the CSS transition on .leaf
-  var DELAY = 120;    // stagger when several pages turn at once
+  // Lite mode: no 3D page flip, just a quick fade. Used on Android and weaker
+  // devices, where 3D layers with scrolling text are slow and can fail to paint.
+  // Test with ?lite=1 (force on) or ?lite=0 (force off) in the address.
+  var q = (location.search.match(/[?&]lite=([01])/) || [])[1];
+  var ua = navigator.userAgent || '';
+  var LITE = q ? q === '1' :
+    (/Android/i.test(ua) ||
+     (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+     (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4));
+  if (LITE) document.documentElement.classList.add('lite');
+
+  var small = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+  var DUR = LITE ? 300 : (small ? 600 : 1100); // must match the CSS transition on .leaf
+  var DELAY = LITE ? 0 : 120;    // stagger when several pages turn at once
   var DEV = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
 
   function dev(n) { return String(n).replace(/\d/g, function (d) { return DEV[d]; }); }
@@ -144,7 +160,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   // hide pages far from the current one so only a few 3D layers exist (big win on phones)
   function cull() {
     leaves.forEach(function (l, i) {
-      l.style.display = Math.abs(i - cur) > 2 ? 'none' : '';
+      l.style.display = Math.abs(i - cur) > (LITE ? 1 : 2) ? 'none' : '';
     });
   }
 
@@ -293,8 +309,19 @@ document.getElementById('year').textContent = new Date().getFullYear();
       if (window.console) console.error(err);
     }
   }
-  var started = false;
+  var started = false, fontsDone = false, builtEarly = false;
   function once() { if (!started) { started = true; start(); } }
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(once);
-  setTimeout(once, 1500); // don't wait forever on slow networks
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      fontsDone = true;
+      once();
+      if (builtEarly) rebuildSoon(); // fonts arrived late: re-flow once with the real font
+    });
+  } else {
+    fontsDone = true;
+  }
+  setTimeout(function () {       // don't wait forever on slow networks
+    if (!started) builtEarly = !fontsDone;
+    once();
+  }, 1500);
 })();
