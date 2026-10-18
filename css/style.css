@@ -337,6 +337,27 @@ button{ font:inherit; color:inherit; }
 .js .reflection .poem-body p.philosophy{ margin-top:28px; }
 .js .reflection .label{ font-size:.92em; }
 
+/* contact page */
+.contact-list{ border-top:1px solid var(--line); }
+.contact-list li{ border-bottom:1px solid var(--line); }
+.contact-list a{
+  display:flex; align-items:baseline; gap:24px;
+  padding:22px 8px;
+  color:var(--ink);
+  transition:color .3s ease, padding-left .35s ease;
+}
+.contact-list a:hover{ color:var(--accent); padding-left:20px; }
+.clabel{
+  width:96px; flex-shrink:0;
+  font-family:var(--font-latin); font-style:italic;
+  font-size:17px; letter-spacing:.14em; color:var(--accent);
+}
+.cvalue{
+  font-family:var(--font-latin); font-weight:500;
+  font-size:clamp(20px, 2.6vw, 24px); overflow-wrap:anywhere;
+}
+.contact-end{ margin-top:44px; }
+
 /* the extra row on the contents page */
 .poem-index .extra a{ font-family:var(--font-latin); font-style:italic; letter-spacing:.08em; }
 
