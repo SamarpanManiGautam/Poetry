@@ -11,6 +11,14 @@ document.getElementById('year').textContent = new Date().getFullYear();
   var pager = main && main.querySelector('.pager');
   if (!main || !pager) return;
 
+  // Android phones get a plain scrolling page: it is fast on every phone.
+  // The page-turning book stays on laptops, tablets and iPhones.
+  // Override in the address: ?book=1 forces the book, ?book=0 forces the plain page.
+  var forced = (location.search.match(/[?&]book=([01])/) || [])[1];
+  var plain = forced ? forced === '0' :
+    (/Android/i.test(navigator.userAgent || '') && window.matchMedia('(max-width: 760px)').matches);
+  if (plain) return;
+
   var prevBtn = document.getElementById('prev');
   var nextBtn = document.getElementById('next');
   var count = document.getElementById('count');
