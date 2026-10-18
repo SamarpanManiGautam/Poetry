@@ -1,4 +1,8 @@
-
+/* =========================================================
+   Samarpan — poetry site
+   A small book. Ivory leaves, deep ink, one thread of bronze.
+   Refined serif Devanagari. Pages turn one at a time.
+   ========================================================= */
 :root{
   --paper:      #FAF7F1;
   --paper-2:    #F3EEE4;
@@ -213,12 +217,11 @@ button{ font:inherit; color:inherit; }
 }
 
 .js .leaf{
-  position:absolute; inset:0;
+  position:absolute; top:0; right:0; bottom:0; left:0;
   transform-style:preserve-3d;
   transform-origin:left center;
   transition:transform 1.1s cubic-bezier(.6,.05,.2,1);
   border-radius:3px 8px 8px 3px;
-  will-change:transform;
 }
 .js .leaf.is-flipped{ transform:rotateY(-180deg); }
 .js .book.no-anim .leaf,
@@ -226,7 +229,7 @@ button{ font:inherit; color:inherit; }
 .js .leaf.measure{ visibility:hidden; pointer-events:none; z-index:-1; transition:none; }
 
 .js .face{
-  position:absolute; inset:0;
+  position:absolute; top:0; right:0; bottom:0; left:0;
   backface-visibility:hidden; -webkit-backface-visibility:hidden;
   background:var(--leaf);
   border-radius:inherit;
@@ -238,20 +241,20 @@ button{ font:inherit; color:inherit; }
 }
 /* gutter near the spine */
 .js .face.front::before{
-  content:""; position:absolute; inset:0 auto 0 0; width:30px; z-index:3;
+  content:""; position:absolute; top:0; bottom:0; left:0; width:30px; z-index:3;
   background:linear-gradient(to right, rgba(70,48,15,.13), transparent);
   pointer-events:none;
 }
 /* the page darkens a little as it lifts */
 .js .face.front::after{
-  content:""; position:absolute; inset:0; z-index:3; pointer-events:none;
+  content:""; position:absolute; top:0; right:0; bottom:0; left:0; z-index:3; pointer-events:none;
   background:linear-gradient(to left, rgba(70,48,15,.22), transparent 70%);
   opacity:0; transition:opacity 1.1s ease;
 }
 .js .leaf.is-flipped .face.front::after{ opacity:1; }
 
 .js .page-inner{
-  position:absolute; inset:0;
+  position:absolute; top:0; right:0; bottom:0; left:0;
   overflow-y:auto; overflow-x:hidden;
   display:flex; flex-direction:column;
   scrollbar-width:thin; scrollbar-color:rgba(140,107,63,.35) transparent;
@@ -362,7 +365,7 @@ button{ font:inherit; color:inherit; }
 .js .reveal{ opacity:0; transform:translateY(10px); }
 .js .leaf.is-seen .reveal{
   animation:rise 1.1s ease forwards;
-  animation-delay:calc(.3s + var(--i, 0) * .16s);
+  animation-delay:calc(.15s + var(--i, 0) * .1s);
 }
 @keyframes rise{ to{ opacity:1; transform:none; } }
 
