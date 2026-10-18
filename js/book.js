@@ -64,6 +64,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
       var art = document.createElement('article');
       art.className = (cont ? src.className.replace(/\bpoem\b/, 'poem is-cont') : src.className);
       art.dataset.key = src.id;
+      art.classList.add('page'); // so we measure with the same padding as the real page
       if (!cont) {
         art.id = src.id;
         if (num) art.appendChild(num.cloneNode(true));
@@ -294,34 +295,54 @@ document.getElementById('year').textContent = new Date().getFullYear();
     if (book.clientWidth !== lastW || book.clientHeight !== lastH) rebuildSoon();
   });
 
-  // Build only after the fonts are ready, so pages are measured with the real
-  // font. If anything goes wrong, the poems fall back to a plain readable page.
+  // Load the exact fonts first, then build, so pages are measured with the real
+  // fonts. A small "loading" mark shows meanwhile. If anything goes wrong, the
+  // poems fall back to a plain readable page.
+  var loader = null;
+
+  function fallback(err) {
+    N = 0;
+    document.documentElement.classList.remove('js');
+    if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
+    if (book.parentNode) main.removeChild(book);
+    sources.forEach(function (s) { main.insertBefore(s, pager); });
+    if (window.console) console.error(err);
+  }
+
   function start() {
     try {
       sources.forEach(function (e) { if (e.parentNode === main) main.removeChild(e); });
       document.documentElement.classList.add('js');
-      build();
-    } catch (err) {
-      N = 0;
-      document.documentElement.classList.remove('js');
-      if (book.parentNode) main.removeChild(book);
-      sources.forEach(function (s) { main.insertBefore(s, pager); });
-      if (window.console) console.error(err);
-    }
+      loader = mk('div', 'book-loading');
+      loader.textContent = '…';
+      book.appendChild(loader);
+      // let the browser paint the loader before the (synchronous) build
+      setTimeout(function () {
+        try {
+          build();
+          if (loader.parentNode) loader.parentNode.removeChild(loader);
+        } catch (err) { fallback(err); }
+      }, 30);
+    } catch (err) { fallback(err); }
   }
-  var started = false, fontsDone = false, builtEarly = false;
+
+  function loadFonts() {
+    if (!document.fonts || !document.fonts.load) return Promise.resolve();
+    return Promise.all([
+      document.fonts.load('400 20px "Noto Serif Devanagari"', 'समर्पण कविता'),
+      document.fonts.load('400 20px "Tiro Devanagari Hindi"', 'समर्पण कविता'),
+      document.fonts.load('500 20px "Cormorant Garamond"', 'Ab'),
+      document.fonts.load('italic 400 20px "Cormorant Garamond"', 'Ab')
+    ]).catch(function () {});
+  }
+
+  var started = false, late = false;
   function once() { if (!started) { started = true; start(); } }
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function () {
-      fontsDone = true;
-      once();
-      if (builtEarly) rebuildSoon(); // fonts arrived late: re-flow once with the real font
-    });
-  } else {
-    fontsDone = true;
-  }
-  setTimeout(function () {       // don't wait forever on slow networks
-    if (!started) builtEarly = !fontsDone;
-    once();
-  }, 1500);
+  loadFonts().then(function () {
+    if (!started) once();
+    else if (late) rebuildSoon();   // fonts arrived after a slow start: re-flow once
+  });
+  setTimeout(function () {          // don't wait forever on a slow network
+    if (!started) { late = true; once(); }
+  }, 2500);
 })();
