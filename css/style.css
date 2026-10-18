@@ -1,3 +1,8 @@
+/* =========================================================
+   Samarpan — poetry site
+   A small book. Ivory leaves, deep ink, one thread of bronze.
+   Refined serif Devanagari. Pages turn one at a time.
+   ========================================================= */
 :root{
   --paper:      #FAF7F1;
   --paper-2:    #F3EEE4;
@@ -338,25 +343,21 @@ button{ font:inherit; color:inherit; }
 .js .reflection .label{ font-size:.92em; }
 
 /* contact page */
-.contact-list{ border-top:1px solid var(--line); }
-.contact-list li{ border-bottom:1px solid var(--line); }
-.contact-list a{
-  display:flex; align-items:baseline; gap:24px;
-  padding:22px 8px;
-  color:var(--ink);
-  transition:color .3s ease, padding-left .35s ease;
+.contact-icons{
+  display:flex; justify-content:center; gap:26px;
+  padding:18px 0 6px;
 }
-.contact-list a:hover{ color:var(--accent); padding-left:20px; }
-.clabel{
-  width:96px; flex-shrink:0;
-  font-family:var(--font-latin); font-style:italic;
-  font-size:17px; letter-spacing:.14em; color:var(--accent);
+.icon-link{
+  display:grid; place-items:center;
+  width:66px; height:66px; border-radius:50%;
+  border:1px solid var(--line);
+  color:var(--ink-soft);
+  transition:color .3s ease, border-color .3s ease, transform .3s ease;
 }
-.cvalue{
-  font-family:var(--font-latin); font-weight:500;
-  font-size:clamp(20px, 2.6vw, 24px); overflow-wrap:anywhere;
-}
-.contact-end{ margin-top:44px; }
+.icon-link svg{ width:26px; height:26px; }
+.icon-link:hover,
+.icon-link:focus-visible{ color:var(--accent); border-color:var(--accent); transform:translateY(-3px); }
+.contact-end{ margin-top:52px; }
 
 /* the extra row on the contents page */
 .poem-index .extra a{ font-family:var(--font-latin); font-style:italic; letter-spacing:.08em; }
