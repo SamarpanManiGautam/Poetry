@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://samarpanmanigautam.com.np/sitemap.xml
